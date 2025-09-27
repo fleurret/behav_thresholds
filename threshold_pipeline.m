@@ -3,16 +3,16 @@
 % stored in a separate subfolder
 % e.g. Behavior > SUBJ-ID-200 > [list of mat files from individual days];
 % behavdir will be C:\Users\rose\Behavior
-behavdir = 'D:\Caras\Analysis\Fiber photometry\Behavior';
+behavdir = 'E:\Caras\Analysis\Fiber photometry\Behavior';
 
 % where you are saving your data
-savedir = 'D:\Caras\Analysis\Fiber photometry\Behavior';
+savedir = 'E:\Caras\Analysis\Fiber photometry\Behavior';
 
 % parent folder where your data is located - should have subfolders for each
 % condition, and then sub-subfolder subject with behavior file
 % e.g. Caspase experiment > Control > SUBJ200 > SUBJ-ID-200_allSessions.mat; pth will be
 % C:\Users\rose\Caspase experiment
-pth = 'D:\Caras\Analysis\Fiber photometry\Behavior\Behavior';
+pth = 'E:\Caras\Analysis\Caspase\Acquisition';
 
 % number of days you want to analyze
 maxdays = 10;
