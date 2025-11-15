@@ -3,14 +3,11 @@ function avg_threshold(pth, maxdays, yl, c)
 % PROCESS
 
 % extract groups
-groups = dir(pth);
-groups(~[groups.isdir]) = [];
-groups(ismember({groups.name},{'.','..'})) = [];
+groups = uigetfile_n_dir(pth, 'Select data directory');
 
 % access condition folders
 for i = 1:length(groups)
-    cond = groups(i).name;
-    fn = fullfile(pth,cond);
+    fn = fullfile(groups{i});
 
     % extract subjects
     subjects = dir(fn);
@@ -51,6 +48,8 @@ for i = 1:length(groups)
     end
     
     % populate legend values
+    cond = split(fn, append(pth, '\'));
+    cond = cell2mat(cond(2));
     lv = append(cond,' (n = ', num2str(length(subjects)),')');
     C{i} = lv;
 end
