@@ -6,13 +6,13 @@
 behavdir = 'D:\Caras\Analysis\Fiber photometry\Behavior';
 
 % where you are saving your data
-savedir = 'D:\Caras\Analysis\Fiber photometry\Behavior';
+savedir = 'D:\Caras\Analysis\Caspase\Acquisition\Asbah cohort';
 
 % parent folder where your data is located - should have subfolders for each
 % condition, and then sub-subfolder subject with behavior file
 % e.g. Caspase experiment > Control > SUBJ200 > SUBJ-ID-200_allSessions.mat; pth will be
 % C:\Users\rose\Caspase experiment
-pth = 'D:\Caras\Analysis\Caspase\Acquisition';
+pth = 'D:\Caras\Analysis\Caspase\Acquisition\Asbah cohort';
 
 % number of days you want to analyze
 maxdays = 10;
@@ -21,7 +21,7 @@ maxdays = 10;
 yl = [-20,-2];
 
 % colors to use in your graphs. rgb values (https://www.color-hex.com/)
-c = [85,214,190; 18,78,120; 217,93,57]./255;
+c = [88, 44, 77; 58, 96, 110; 156, 208, 143; 252, 227, 180; 188, 57, 8]./255;
 
 %% BEHAVIOR PIPELINE - REMEMBER TO RUN THIS FOR NEW DATA!
 % behavior pipeline to calculate thresholds for each day
@@ -43,7 +43,7 @@ avg_threshold(pth, maxdays, yl, c)
 %% SINGLE SUBJECT
 % your pth is the folder containing the allSessions.mat file for the
 % subject you want to analyze
-pth = 'D:\Caras\Analysis\Fiber photometry\Perceptual training\Behavior\989';
+pth = 'D:\Caras\Analysis\Caspase\Acquisition\Asbah cohort\Caspase + Diluted rGFP-cre\SUBJ-ID-1062';
 
 % number of days you want to analyze
 maxdays = 10;
@@ -60,4 +60,11 @@ one_subject_threshold(pth, maxdays, yl, c);
 % extracts each subject's initial threshold, best threshold, and learning
 % rate into a .csv file
 
-learning_rates(pth, maxdays)
+learning_rates(pth, savedir, maxdays)
+
+%% COMPARE LEARNING RATES ACROSS GROUPS
+% plots bar graphs of mean learning rates +- SEM for each experimental
+% condition
+% measure: 'learningrate', 'besththreshold', 'startingthreshold'
+
+plot_learning_rates(savedir, 'learningrate', c)

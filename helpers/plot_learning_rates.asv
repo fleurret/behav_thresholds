@@ -1,0 +1,68 @@
+function plot_learning_rates(savedir, c)
+
+% figure settings
+f = figure();
+f.Position = [0, 0, 800, 350];
+hold on
+ax = gca;
+set(ax, 'TickDir', 'out',...
+    'XTickLabelRotation', 0,...
+    'TickLength', [0.02,0.02],...
+    'LineWidth', 3,...
+    'YDir','reverse');
+set(findobj(ax,'-property','FontName'),...
+    'FontName','Arial')
+
+% find .csv
+files = dir(savedir);
+files(ismember({files.name},{'.','..'})) = [];
+d = files(contains({files.name}, 'learning_rates.csv'));
+
+if isempty(d)
+    warning('learning_rates.csv not found!')
+end
+
+D = readtable(fullfile(d.folder, d.name));
+
+% separate by condition
+conditions = unique(D.Condition);
+x = [1:length(conditions)];
+
+for i = 1:length(conditions)
+    grp = D(contains(D.Condition, conditions(i)),:);
+    
+    switch measure
+        case learningrate
+            m = mean(grp.Learning_rate);
+            sem = std(grp.Learning_rate)/sqrt(height(grp));
+        case bestthreshold
+            m = mean(grp.Best_threshold);
+            sem = std(grp.Best_threshold)/sqrt(height(grp));
+        case startingthreshold
+            m = mean(grp.Starting_threshold);
+            sem = std(grp.Starting_threshold)/sqrt(height(grp));
+    end
+    
+    % plot means and SEM
+    bar(ax, x(i), m,...
+        'FaceColor', c(i,:),...
+        'LineStyle', 'none')
+    
+    % errorbar properties
+    errorbar(x(i), m , sem,...
+        'Color', 'k',...
+        'CapSize', 0,...
+        'LineWidth', 2,...
+        'LineStyle', 'none',...
+        'Marker', 'none');
+end
+
+% ax labels
+xticks([x])
+xticklabels(conditions)
+xlabel(ax,'Group',...
+    'FontSize',10,...
+    'FontWeight', 'bold')
+ylabel(ax,'Learning rate (db re: 100%/day)',...
+    'FontSize', 10,...
+    'FontWeight', 'bold')

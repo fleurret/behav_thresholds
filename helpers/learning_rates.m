@@ -1,4 +1,4 @@
-function learning_rates(pth, maxdays)
+function learning_rates(pth, savedir, maxdays)
 
 % PROCESS
 % empty table
@@ -53,7 +53,7 @@ for i = 1:length(groups)
         
         [fo,~] = fit(x',t','poly1');
         
-        D{1} = append('SUBJ-ID-',subjects(subj).name);
+        D{1} = append(subjects(subj).name);
         D{2} = cond;
         D{3} = t(1);
         D{4} = min(t);
