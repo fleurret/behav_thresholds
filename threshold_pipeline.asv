@@ -57,15 +57,11 @@ one_subject_threshold(pth, maxdays, yl);
 % extracts each subject's initial threshold, best threshold, and learning
 % rate into a .csv file
 
-% rerun when you get new data!
-
 learning_rates(pth, savedir, maxdays)
 
 %% COMPARE LEARNING RATES ACROSS GROUPS
 % plots bar graphs of mean learning rates +- SEM for each experimental
-% condition. 
-
-% run learning_rates function first!
+% condition
 
 % measure: 'learningrate', 'besththreshold', 'startingthreshold',
 % 'improvement'
@@ -78,8 +74,7 @@ plot_learning_rates(savedir, 'learningrate', c)
 % plots bar graphs of mean cell density/count +- SEM for each experimental
 % condition
 
-% abl: 'IC', 'ACX'
-% c: color palette defined in the first section
+
 
 plot_ablation(savedir,'IC', c)
 

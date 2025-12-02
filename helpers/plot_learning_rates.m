@@ -41,6 +41,10 @@ for i = 1:length(conditions)
         case 'startingthreshold'
             m = mean(grp.Starting_threshold);
             sem = std(grp.Starting_threshold)/sqrt(height(grp));
+        case 'improvement'
+           pc = ((grp.Best_threshold-grp.Starting_threshold)./grp.Starting_threshold)*100;
+           m = mean(pc);
+           sem = std(pc)/sqrt(height(pc));
     end
     
     % plot means and SEM
