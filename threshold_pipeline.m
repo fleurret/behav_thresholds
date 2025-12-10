@@ -21,7 +21,11 @@ maxdays = 10;
 yl = [-20,-2];
 
 % colors to use in your graphs. rgb values (https://www.color-hex.com/)
-c = [88, 44, 77; 58, 96, 110; 156, 208, 143; 252, 227, 180; 188, 57, 8]./255;
+c = [88, 44, 77;...
+    58, 96, 110;...
+    156, 208, 143;...
+    252, 227, 180;...
+    188, 57, 8]./255;
 
 %% BEHAVIOR PIPELINE - REMEMBER TO RUN THIS FOR NEW DATA!
 % behavior pipeline to calculate thresholds for each day
@@ -40,18 +44,21 @@ caraslab_behav_pipeline(savedir, behavdir, 'none', 1)
 
 avg_threshold(pth, maxdays, yl, c)
 
-%% SINGLE SUBJECT
-% your pth is the folder containing the allSessions.mat file for the
-% subject you want to analyze
-pth = 'D:\Caras\Analysis\Caspase\Acquisition\Asbah cohort\Caspase + Diluted rGFP-cre\SUBJ-ID-1062';
+%% OUTPUT THRESHOLDS FOR STATS
+% creates a csv file with each subject's threshold for each day
 
-% number of days you want to analyze
-maxdays = 10;
+stats_output(pth)
 
+%% REPRESENTATIVE SUBJECT CURVES AND THRESHOLDS
 % y limit - adjust as needed to make sure all data points are visible
 yl = [-20,-5];
 
-one_subject_threshold(pth, maxdays, yl);
+one_subject_threshold(savedir, maxdays, yl);
+
+%% SINGLE SUBJECT PSYCHOMETRIC CURVES
+% plots psychometric curves across days for one subject
+
+
 
 %% CALCULATE SUJBECT LEARNING RATES
 % extracts each subject's initial threshold, best threshold, and learning
@@ -73,22 +80,28 @@ learning_rates(pth, savedir, maxdays)
 
 plot_learning_rates(savedir, 'learningrate', c)
 
-
 %% ABLATION QUANTIFICATION
-% plots bar graphs of mean cell density/count +- SEM for each experimental
+% plot_ablation: plots bar graphs of mean cell density/count +- SEM for each experimental
 % condition
+% ablation_corr: is there a correlation between IC and ACx ablations in
+% each group?
 
 % abl: 'IC', 'ACX'
 % c: color palette defined in the first section
 
 plot_ablation(savedir,'IC', c)
+% ablation_corr(savedir, c)
 
 %% BEHAVIOR VS ABLATION CORRELATION
-% plots correlations between behavior and ablation measures
+% behavior_ablation: plots correlations between behavior and ablation
+% measures for each group
+
+% behavior_ablation_all: plots it all on one axis
 
 % measure: 'learningrate', 'besththreshold', 'startingthreshold',
 % 'improvement'
 % abl: 'IC', 'ACX'
 % c: color palette defined in the first section
 
-behavior_ablation(savedir, 'learningrate', 'IC', c)
+behavior_ablation(savedir, 'bestthreshold', 'IC', c)
+% behavior_ablation_all(savedir, 'bestthreshold', 'IC', c)

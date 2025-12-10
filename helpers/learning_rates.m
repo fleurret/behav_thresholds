@@ -7,14 +7,22 @@ headers = {'Subject', 'Condition', 'Starting_threshold', 'Best_threshold', 'Lear
 alldata = array2table(base);
 alldata.Properties.VariableNames = headers;
 
-% extract groups
-groups = dir(pth);
-groups(~[groups.isdir]) = [];
-groups(ismember({groups.name},{'.','..'})) = [];
+%Prompt user to select folders
+% uigetfile_n_dir copied from here:
+% https://www.mathworks.com/matlabcentral/fileexchange/32555-uigetfile_n_dir-select-multiple-files-and-directories
+datafolders_names = uigetfile_n_dir(pth,'Select data directories');  % 
+groups = {};
+
+for i = 1:length(datafolders_names)
+    [~, groups{end+1}, ~] = fileparts(datafolders_names{i});
+end
+
+% Update pth in case it changed
+[pth, ~, ~] = fileparts(datafolders_names{1});
 
 % access condition folders
 for i = 1:length(groups)
-    cond = groups(i).name;
+    cond = cell2mat(groups(i));
     fn = fullfile(pth,cond);
 
     % extract subjects

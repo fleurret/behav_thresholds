@@ -55,9 +55,9 @@ for i = 1:length(conditions)
         
         switch abl
             case 'IC'
-                n(j) = grp.IC_L_density(j,:);
+                n(j) = grp.IC_L_density(j,:) + grp.IC_R_density(j,:);
             case 'ACX'
-                n(j) = grp.ACx_L_density(j,:);
+                n(j) = grp.ACx_L_count(j,:) + grp.ACx_R_count(j,:);
         end
     end
     
@@ -123,7 +123,7 @@ for i = 1:length(conditions)
     r = R(2);
     p = P(2);
     str = sprintf('R = %s, p = %s \n', num2str(r), num2str(p));
-    T = text(min(xlim)+(max(xlim)-min(xlim))*0.5, min(ylim)+0.5, str);
+    T = text(max(xlim)*0.85, max(ylim)-0.2, str);
     set(findobj(T),...
         'FontSize', 9,...
         'FontName', 'Arial',...
