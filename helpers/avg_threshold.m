@@ -99,6 +99,7 @@ for i = 1:length(groups)
 end
 
 % GRAPH PROPERTIES
+xlim([0.9, max(xi)+0.1])
 
 % tick label, direction, line width, font size
 set(ax, 'XTick', log10(1:10)+1,...
