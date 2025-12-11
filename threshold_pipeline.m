@@ -27,6 +27,9 @@ c = [88, 44, 77;...
     252, 227, 180;...
     188, 57, 8]./255;
 
+% use custom font
+fontface = 'Barlow';
+
 %% BEHAVIOR PIPELINE - REMEMBER TO RUN THIS FOR NEW DATA!
 % behavior pipeline to calculate thresholds for each day
 % when running, select the folder containing the
@@ -42,7 +45,7 @@ caraslab_behav_pipeline(savedir, behavdir, 'none', 1)
 
 % error bars represent standard error
 
-avg_threshold(pth, maxdays, yl, c)
+avg_threshold(pth, savedir, maxdays, yl, c, fontface)
 
 %% OUTPUT THRESHOLDS FOR STATS
 % creates a csv file with each subject's threshold for each day
@@ -53,8 +56,8 @@ stats_output(pth)
 % y limit - adjust as needed to make sure all data points are visible
 yl = [-20,-5];
 
-% one_subject_threshold(savedir, maxdays, yl);
-one_subject_threshold_rep(savedir, maxdays, yl);
+% one_subject_threshold(pth, savedir, maxdays, yl, fontface);
+one_subject_threshold_rep(pth, savedir, maxdays, yl, fontface);
 
 %% SINGLE SUBJECT PSYCHOMETRIC CURVES
 % plots psychometric curves across days for one subject

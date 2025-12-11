@@ -1,4 +1,4 @@
-function avg_threshold(pth, maxdays, yl, c)
+function avg_threshold(pth, savedir, maxdays, yl, c, fontface)
 
 % PROCESS
 
@@ -111,7 +111,7 @@ set(ax, 'XTick', log10(1:10)+1,...
 
 % set font
 set(findobj(ax,'-property','FontName'),...
-    'FontName','Arial')
+    'FontName',fontface)
 
 % axes labels and title
 xlabel(ax,'Perceptual training day',...
@@ -125,3 +125,8 @@ ylabel(ax,'Threshold (dB re: 100%)',...
 legend(flip(C),'Location','southwest','FontSize',12);
 legend boxoff
 
+% save
+prompt = {'File name (no extension):'};
+sfn = inputdlg(prompt, 'Save figure', [1 40]);
+sffn = cell2mat(fullfile(savedir, append(sfn, '.svg')));
+saveas(f,sffn)
