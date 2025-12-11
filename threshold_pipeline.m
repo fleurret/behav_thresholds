@@ -53,7 +53,8 @@ stats_output(pth)
 % y limit - adjust as needed to make sure all data points are visible
 yl = [-20,-5];
 
-one_subject_threshold(savedir, maxdays, yl);
+% one_subject_threshold(savedir, maxdays, yl);
+one_subject_threshold_rep(savedir, maxdays, yl);
 
 %% SINGLE SUBJECT PSYCHOMETRIC CURVES
 % plots psychometric curves across days for one subject
