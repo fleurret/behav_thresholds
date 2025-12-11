@@ -48,8 +48,7 @@ for i = 1:length(groups)
     end
     
     % populate legend values
-    cond =  split(groups(i), '\');
-    cond = cell2mat(cond(end));
+    [~, cond, ~] =  fileparts(groups(i));
     lv = append(cond,' (n = ', num2str(length(subjects)),')');
     C{i} = lv;
 end
