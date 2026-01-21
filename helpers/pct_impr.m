@@ -1,4 +1,4 @@
-function avg_threshold(pth, savedir, maxdays, yl, c, fontface)
+function pct_impr(pth, savedir, maxdays, c, fontface)
 
 % PROCESS
 % extract groups
@@ -8,7 +8,6 @@ groups = uigetfile_n_dir(pth, 'Select data directory');
 f = figure();
 f.Position = [0, 0, 500, 350];
 ax = gca;
-hold on
 
 % change x values to log scale and offset
 days = 1:maxdays;
@@ -28,9 +27,6 @@ for i = 1:length(groups)
     t = nan(1,maxdays);
     thresholds = nan(length(subjects),maxdays);
     
-    % match color
-    color = matchcolor(fn, c);
-    
     % extract thresholds
     for subj = 1:length(subjects)
         spth = fullfile(subjects(subj).folder,subjects(subj).name);
@@ -43,26 +39,10 @@ for i = 1:length(groups)
         
         vals = O.output;
         for j = 1:length(vals)
-            t(j) = vals(j).fitdata.threshold;
+             t(j) = ((vals(j).fitdata.threshold-vals(1).fitdata.threshold)/vals(1).fitdata.threshold)*100;
         end
         
         thresholds(subj,1:length(t)) = t;
-        xi = xx*xoffset(i);
-        
-        % fit line
-        [fo,~] = fit(xi',t','poly1');
-        bf = fo.p1 .*xi + fo.p2;
-        
-        coefficients = polyfit(xi, t', 1);
-        xFit = linspace(min(xi), max(xi), 1000);
-        yFit = polyval(coefficients, xFit);
-    
-        fl = plot(xFit, yFit,...
-            'Marker', 'none',...
-            'Color', [color, 0.3],...
-            'LineWidth', 1.5,...
-            'LineStyle', '-');
-        uistack(fl, 'bottom');
     end
     
     m = mean(thresholds, 'omitnan');
@@ -73,19 +53,26 @@ for i = 1:length(groups)
     lv = append(cond,' (n = ', num2str(length(subjects)),')');
     C{i} = lv;
     
+    % match color
+    color = matchcolor(fn, c);
+    
+    % plot
+    xi = xx*xoffset(i);
+    
     % errorbar properties
-%     e = errorbar(xi,m,s,...
-%         'Color', color,...
-%         'CapSize', 0,...
-%         'LineWidth', 2,...
-%         'LineStyle', 'none',...
-%         'Marker', 'o',...
-%         'MarkerFaceColor', color, ...
-%         'MarkerSize',8);
-%     alpha = 0.3;
-%     set([e.Bar, e.Line], 'ColorType', 'truecoloralpha', 'ColorData', [e.Line.ColorData(1:3); 255*alpha])
-%     uistack(e,'bottom');
-%     
+    hold on
+    e = errorbar(xi,m,s,...
+        'Color', color,...
+        'CapSize', 0,...
+        'LineWidth', 2,...
+        'LineStyle', 'none',...
+        'Marker', 'o',...
+        'MarkerFaceColor', color, ...
+        'MarkerSize',8);
+    alpha = 0.3;
+    set([e.Bar, e.Line], 'ColorType', 'truecoloralpha', 'ColorData', [e.Line.ColorData(1:3); 255*alpha])
+    uistack(e,'bottom');
+    
     % fit line
     [fo,~] = fit(xi',m','poly1');
     bf = fo.p1 .*xi + fo.p2;
@@ -100,7 +87,6 @@ xlim([0.9, max(xi)+0.1])
 % tick label, direction, line width, font size
 set(ax, 'XTick', log10(1:10)+1,...
     'XTickLabel',days,...
-    'YLim',yl,...
     'TickDir','out',...
     'LineWidth',1.5,...
     'FontSize',12);
@@ -113,7 +99,7 @@ set(findobj(ax,'-property','FontName'),...
 xlabel(ax,'Perceptual training day',...
     'FontWeight','bold',...
     'FontSize', 12);
-ylabel(ax,'Threshold (dB re: 100%)',...
+ylabel(ax,'Threshold improvement (%)',...
     'FontWeight','bold',...
     'FontSize', 12);
 

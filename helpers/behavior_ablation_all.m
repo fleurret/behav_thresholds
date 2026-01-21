@@ -31,6 +31,8 @@ if strcmp(abl, 'ACX')
     conditions = conditions(contains(conditions,'rGFP') | contains(conditions,  'rCre'));
 end
 
+conditions = conditions(~contains(conditions,'ACx'));
+
 B = [];
 N = [];
 

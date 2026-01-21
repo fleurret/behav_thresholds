@@ -32,6 +32,9 @@ if strcmp(abl, 'ACX')
     conditions = conditions(contains(conditions,'rGFP') | contains(conditions,  'rCre'));
 end
 
+% only ibo
+conditions = conditions(~contains(conditions,'ACx'));
+
 % how many subplots
 ts = round(length(conditions)/2);
 
