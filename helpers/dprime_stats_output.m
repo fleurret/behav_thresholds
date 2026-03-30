@@ -9,6 +9,7 @@ Condition = [];
 depths = [];
 dprimes = [];
 n_trials = [];
+fa_rate = [];
 
 % for each subfolder
 for k = 1:length(conditions)
@@ -35,19 +36,24 @@ for k = 1:length(conditions)
         for i = 1:length(output)
             trialdata = output(i).trialmat;
             
+            % calculate FA rate
+            nonam = trialdata(1,:);
+            fa = (nonam(4)/nonam(3))*100;
+            
             % remove nogos
             trialdata(find(trialdata == -40),:) = [];
             
             d = round(output(i).dprimemat(:,1)');
             D = output(i).dprimemat(:,2)';
             n = trialdata(:,3)';
-            
+
             Subjects = [Subjects, repelem(convertCharsToStrings(subjects(subj).name), length(d))];
             Condition = [Condition, repelem({cond}, length(d))];
             Day = [Day, repelem(i, length(d))];
             depths = [depths, d];
             dprimes = [dprimes, D];
             n_trials = [n_trials, n];
+            fa_rate = [fa_rate, repelem(fa, length(d))];
 
             clear d D n
         end
@@ -55,9 +61,9 @@ for k = 1:length(conditions)
 end
 
 % make table
-output = [Subjects', Day', Condition', depths', dprimes', n_trials'];
+output = [Subjects', Day', Condition', depths', dprimes', n_trials', fa_rate'];
 output = array2table(output);
-output.Properties.VariableNames = ["Subject", "Day", "Condition", "Depth", "dprime", "n_trials"];
+output.Properties.VariableNames = ["Subject", "Day", "Condition", "Depth", "dprime", "n_trials", "FA rate"];
 
 % save as file
 sf = fullfile(pth,'dprime_stats_output.csv');

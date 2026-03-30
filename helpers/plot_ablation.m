@@ -1,8 +1,17 @@
-function plot_ablation(savedir, abl, c)
+function plot_ablation(pth, savedir, abl, c)
+
+% select .csv
+d = uigetfile_n_dir(pth, 'Select file');
+
+if ~contains(d, '.csv')
+    warning('invalid file :(')
+end
+
+D = readtable(cell2mat(d));
 
 % figure settings
 f = figure();
-f.Position = [0, 0, 800, 350];
+f.Position = [0, 0, 400, 350];
 hold on
 ax = gca;
 set(ax, 'TickDir', 'out',...
@@ -12,23 +21,15 @@ set(ax, 'TickDir', 'out',...
 set(findobj(ax,'-property','FontName'),...
     'FontName','Arial')
 
-% find .csv
-files = dir(savedir);
-files(ismember({files.name},{'.','..'})) = [];
-d = files(contains({files.name}, 'learning_rates and ihc.csv'));
-
-if isempty(d)
-    warning('learning_rates and ihc.csv not found!')
-end
-
-D = readtable(fullfile(d.folder, d.name));
-
 % separate by condition
 conditions = unique(D.Condition);
 
 % remove ibotenic/saline groups if looking at ACx
-if strcmp(abl, 'ACX')
-    conditions = conditions(contains(conditions,'rGFP') | contains(conditions,  'rCre'));
+switch abl
+    case 'ACX'
+        conditions = conditions(contains(conditions,'rGFP'));
+    case 'IC'
+        conditions = conditions(~contains(conditions,'rGFP'));
 end
 
 groups = [1:length(conditions)];
@@ -39,18 +40,10 @@ for i = 1:length(conditions)
     sem = nan(1, 2);
     
     % calculate means and sem
-    switch abl
-        case 'IC'
-            m(1) = mean(grp.IC_L_density, 'omitnan');
-            m(2) = mean(grp.IC_R_density, 'omitnan');
-            sem(1) = std(grp.IC_L_density, 'omitnan')/sqrt(height(grp));
-            sem(2) = std(grp.IC_R_density, 'omitnan')/sqrt(height(grp));
-        case 'ACX'
-            m(1) = mean(grp.ACx_L_density(:), 'omitnan');
-            m(2) = mean(grp.ACx_R_density(:), 'omitnan');
-            sem(1) = std(grp.ACx_L_density, 'omitnan')/sqrt(height(grp));
-            sem(2) = std(grp.ACx_R_density, 'omitnan')/sqrt(height(grp));
-    end
+    m(1) = mean(grp.L_ablation, 'omitnan');
+    m(2) = mean(grp.R_ablation, 'omitnan');
+    sem(1) = std(grp.L_ablation, 'omitnan')/sqrt(height(grp));
+    sem(2) = std(grp.R_ablation, 'omitnan')/sqrt(height(grp));
     
     x = [groups(i)*2-1, groups(i)*2];
     
@@ -74,6 +67,6 @@ xticklabels(conditions)
 xlabel(ax,'Group',...
     'FontSize',10,...
     'FontWeight', 'bold')
-ylabel(ax, append(abl, ' cell density (cells/mm^2)'),...
+ylabel(ax, append('% ablation'),...
     'FontSize', 10,...
     'FontWeight', 'bold')

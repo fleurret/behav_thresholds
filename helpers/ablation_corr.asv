@@ -26,20 +26,15 @@ end
 
 plots = {'Starting_threshold', 'Best_threshold', 'Learning_rate', 'FA_rate'};
 
-for i = 1:length(plots)
-    val = plots{i};
-    X = [];
-    Y = [];
+for j = 1:length(conditions)
+    grp = D(strcmp(D.Condition, conditions(j)),:);
+    color = matchcolor(conditions(j), c);
     
-    for j = 1:length(conditions)
-        grp = D(strcmp(D.Condition, conditions(j)),:);
-        color = matchcolor(conditions(j), c);
+    for i = 1:length(plots)
+        val = plots{i};
         
         x = grp.L_ablation;
         y = grp.(val);
-        
-        X = [X, x'];
-        Y = [Y, y'];
         
         % plot
         ax(i) = subplot(2,2,i);
@@ -49,8 +44,20 @@ for i = 1:length(plots)
             'SizeData', 80,...
             'MarkerFaceColor', color,...
             'MarkerEdgeAlpha', 0)
+        
+%         % best fit
+%         coefficients = polyfit(x, y, 1);
+%         xFit = linspace(min(x), max(x), 1000);
+%         yFit = polyval(coefficients , xFit);
+%         
+%         hfit = line(ax(i),xFit,yFit, ...
+%             'Color', 'k', ...
+%             'LineWidth',3);
     end
-    
+end
+
+% axes
+for i = 1:length(ax)
     xlabel(ax(i), '% ablation',...
         'FontSize',10,...
         'FontWeight', 'bold')
@@ -63,23 +70,17 @@ for i = 1:length(plots)
         'LineWidth', 3);
     set(findobj(ax(i),'-property','FontName'),...
         'FontName','Arial')
-    
-    coefficients = polyfit(X, Y, 1);
-    xFit = linspace(min(X), max(X), 1000);
-    yFit = polyval(coefficients , xFit);
-    
-    hfit = line(ax(i), xFit, yFit, ...
-        'Color', 'k', ...
-        'LineWidth',3);
-    
-    % R and p values
-    [R,P] = corrcoef(X,Y,'rows','complete');
-    r = R(2);
-    p = P(2);
-    str = sprintf('R = %s, p = %s \n', num2str(r), num2str(p));
-    T = text(max(xlim)*0.85, max(ylim)-0.2, str);
-    set(findobj(T),...
-        'FontSize', 9,...
-        'FontName', 'Arial',...
-        'HorizontalAlignment', 'center');
+end
+
+
+% R and p values
+[R,P] = corrcoef(xf,yf,'rows','complete');
+r = R(2);
+p = P(2);
+str = sprintf('R = %s, p = %s \n', num2str(r), num2str(p));
+T = text(max(xlim)*0.85, max(ylim)-0.2, str);
+set(findobj(T),...
+    'FontSize', 9,...
+    'FontName', 'Arial',...
+    'HorizontalAlignment', 'center');
 end

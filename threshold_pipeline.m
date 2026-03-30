@@ -3,7 +3,7 @@
 % stored in a separate subfolder
 % e.g. Behavior > SUBJ-ID-200 > [list of mat files from individual days];
 % behavdir will be C:\Users\rose\Behavior
-behavdir = 'D:\Caras\Analysis\Caspase\Acquisition\Asbah cohort';
+behavdir = 'D:\Caras\Analysis\Caspase\Acquisition\Shock training\drGFP-Cre (IC) + Casp3 (ACx)';
 
 % where you are saving your data
 savedir = 'D:\Caras\Analysis\Caspase\Acquisition\Asbah cohort';
@@ -32,7 +32,7 @@ c = [61, 35, 87;... % saline
     0, 0, 0]./255;
 
 % use custom font
-fontface = 'Barlow';
+fontface = 'Arial';
 
 %% BEHAVIOR PIPELINE - REMEMBER TO RUN THIS FOR NEW DATA!
 % behavior pipeline to calculate thresholds for each day
@@ -118,8 +118,8 @@ plot_learning_rates(savedir, 'learningrate', c)
 % abl: 'IC', 'ACX'
 % c: color palette defined in the first section
 
-plot_ablation(savedir,'IC', c)
-% ablation_corr(savedir, c)
+% plot_ablation(pth, savedir, 'IC', c)
+ablation_corr(pth, savedir, 'ACX', c)
 
 %% BEHAVIOR VS ABLATION CORRELATION
 % behavior_ablation: plots correlations between behavior and ablation
@@ -137,4 +137,13 @@ behavior_ablation_all(savedir, 'improvement', 'IC', c)
 
 %% PLOT D' FOR EACH DEPTH
 
-dprime_depths(savedir, c)
+% dprime_depths(savedir, c)
+dprime_depths_days(savedir, c)
+
+%% psychometric slopes
+
+psych_slopes(pth, c)
+
+%%
+
+fa_rate(pth, c)

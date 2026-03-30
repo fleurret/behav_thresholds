@@ -30,6 +30,10 @@ for i = 1:length(groups)
         microns = table2array(PP(:,1));
         vals = table2array(PP(:,2));
         
+        if isempty(vals)
+            continue
+        end
+        
         if min(vals) > 0
             vals = vals - min(vals);
         end
@@ -44,11 +48,16 @@ for i = 1:length(groups)
 %         
 %         binstart = edges(relevantbin);
 %         binsize = edges(relevantbin+1) - binstart;
-%         pctstart = bincumpcts(relevantbin-1);
+%         
+%         if binstart > 0
+%             pctstart = bincumpcts(relevantbin-1);
+%         else
+%             pctstart = 0;
+%         end
+%         
 %         pctsize = bincumpcts(relevantbin) - pctstart;
-        
 %         pctileest = binstart + binsize * (targetpct - pctstart) / pctsize;
-        
+%         
         lesion = microns(vals < pctileest);
         pctlesion = (length(lesion)/length(microns))*100;
         
@@ -68,3 +77,11 @@ end
 
 % delete first row
 alldata(1,:) = [];
+
+% save
+savedir = 'D:\Caras\Analysis\Caspase\Acquisition\acx plot profile';
+sf = fullfile(savedir, 'plot_profile_lesions.csv');
+
+fprintf('Saving file ...')
+writetable(alldata,sf);
+fprintf(' done\n')

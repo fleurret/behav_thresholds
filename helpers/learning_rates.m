@@ -2,8 +2,8 @@ function learning_rates(pth, savedir, maxdays)
 
 % PROCESS
 % empty table
-base = nan(1,5);
-headers = {'Subject', 'Condition', 'Starting_threshold', 'Best_threshold', 'Learning_rate'};
+base = nan(1,6);
+headers = {'Subject', 'Condition', 'Starting_threshold', 'Best_threshold', 'Learning_rate', 'FA_rate'};
 alldata = array2table(base);
 alldata.Properties.VariableNames = headers;
 
@@ -32,6 +32,7 @@ for i = 1:length(groups)
     
     % create empty array to store data
     t = nan(1,maxdays);
+    fa = nan(1, maxdays);
     thresholds = nan(length(subjects),maxdays);
     
     % extract thresholds
@@ -47,6 +48,8 @@ for i = 1:length(groups)
         
         for j = 1:length(output)
             t(j) = output(j).fitdata.threshold;
+            nonam = output(j).trialmat(1,:);
+            fa(j) = (nonam(4)/nonam(3))*100;
         end
         
         % calculate fit
@@ -66,6 +69,7 @@ for i = 1:length(groups)
         D{3} = t(1);
         D{4} = min(t);
         D{5} = fo.p1;
+        D{6} = mean(fa);
         
         % append to table
         alldata = [alldata; D];

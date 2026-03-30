@@ -13,6 +13,8 @@ ax = gca;
 xx = [1:15];
 xoffset = [0.985, 0.99, 1, 1.005, 1.01];
 
+c = flip(c);
+
 % access condition folders
 for i = 1:length(groups)
     fn = fullfile(groups{i});
@@ -47,6 +49,7 @@ for i = 1:length(groups)
         end
 
         % plot individual trace
+        color = c(i,:);
         xi = xx*xoffset(i);
         linecolor = [color, 0.5];
         
