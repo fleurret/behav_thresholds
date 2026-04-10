@@ -127,4 +127,4 @@ plot_ablation(qpth, savedir, 'IC', c, fontface)
 % ablation_corr(filepth, savedir, abl, side, c, fontface)
 % side: 'L', 'R', 'Both'
 
-ablation_corr(qpth, savedir, 'ACX', 'R', c, fontface)
+ablation_corr(qpth, savedir, 'IC', 'R', c, fontface)
