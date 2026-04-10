@@ -104,7 +104,9 @@ ylabel(ax,'Threshold improvement (%)',...
     'FontSize', 12);
 
 % legend
-legend(flip(C),'Location','southwest','FontSize',12);
+legend(C,...
+    'Location','southwest',...
+    'FontSize',12);
 legend boxoff
 
 % save

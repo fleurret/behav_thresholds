@@ -17,6 +17,9 @@ pth = 'D:\Caras\Analysis\Caspase\Acquisition\Asbah cohort';
 % shock training folder
 spth = 'D:\Caras\Analysis\Caspase\Acquisition\Shock training';
 
+% histology/IHC quantification file
+qpth = 'D:\Caras\Analysis\Caspase\Acquisition\Asbah cohort\learning_rates and ihc.csv';
+
 % number of days you want to analyze
 maxdays = 10;
 
@@ -40,6 +43,7 @@ fontface = 'Arial';
 % individual files, not the each of the files
 % e.g. Behavior > SUBJ-ID-200 > [list of mat files from individual days];
 % you would select the SUBJ-ID-200 folder
+
 caraslab_behav_pipeline(savedir, behavdir, 'none', 0)
 
 %% SHOCK TRAINING GRAPHS
@@ -48,7 +52,7 @@ caraslab_behav_pipeline(savedir, behavdir, 'none', 0)
 % and highest d' achieved during shock training
 
 % shock_training_dprimes(spth, savedir, c, fontface)
-days_to_criterion(spth, savedir, c, fontface, 0)
+% days_to_criterion(spth, savedir, c, fontface, 0)
 
 %% GRAPH AVERAGE THRESHOLDS ACROSS DAYS
 % before you run this, remember to pull out the folder containing the
@@ -66,7 +70,7 @@ avg_threshold(pth, savedir, maxdays, yl, c, fontface)
 
 % error bars represent standard error
 
-pct_impr(pth, savedir, maxdays, c, fontface)
+% pct_impr(pth, savedir, maxdays, c, fontface)
 
 %% OUTPUT THRESHOLDS FOR STATS
 % stats_output: creates a csv file with each subject's threshold and FA for
@@ -75,7 +79,7 @@ pct_impr(pth, savedir, maxdays, c, fontface)
 % dprime_stats_output: creates a csv file with each subject's d' and number
 % of trials for each depth presented
 
-stats_output(pth)
+% stats_output(pth)
 % dprime_stats_output(pth)
 
 %% REPRESENTATIVE SUBJECT CURVES AND THRESHOLDS
@@ -95,7 +99,7 @@ one_subject_threshold(pth, savedir, maxdays, yl, fontface);
 
 % rerun when you get new data!
 
-learning_rates(pth, savedir, maxdays)
+% learning_rates(pth, savedir, maxdays)
 
 %% COMPARE LEARNING RATES ACROSS GROUPS
 % plots bar graphs of mean learning rates +- SEM for each experimental
@@ -107,43 +111,20 @@ learning_rates(pth, savedir, maxdays)
 % 'improvement'
 % c: color palette defined in the first section
 
-plot_learning_rates(savedir, 'learningrate', c)
+plot_learning_rates(savedir, 'bestthreshold', c)
 
 %% ABLATION QUANTIFICATION
-% plot_ablation: plots bar graphs of mean cell density/count +- SEM for each experimental
-% condition
-% ablation_corr: is there a correlation between IC and ACx ablations in
-% each group?
+% plots bar graphs of mean ablation +- SEM for each experimental condition
+% plot_ablation(filepth, savedir, abl, c)
 
 % abl: 'IC', 'ACX'
 % c: color palette defined in the first section
 
-% plot_ablation(pth, savedir, 'IC', c)
-ablation_corr(pth, savedir, 'ACX', c)
+plot_ablation(qpth, savedir, 'IC', c, fontface)
 
-%% BEHAVIOR VS ABLATION CORRELATION
-% behavior_ablation: plots correlations between behavior and ablation
-% measures for each group
+%% CORRELATING ABLATION WITH BEHAVIOR
+% plot correlation between ablation and behavior
+% ablation_corr(filepth, savedir, abl, side, c, fontface)
+% side: 'L', 'R', 'Both'
 
-% behavior_ablation_all: plots it all on one axis
-
-% measure: 'learningrate', 'besththreshold', 'startingthreshold',
-% 'improvement'
-% abl: 'IC', 'ACX'
-% c: color palette defined in the first section
-
-% behavior_ablation(savedir, 'bestthreshold', 'IC', c)
-behavior_ablation_all(savedir, 'improvement', 'IC', c)
-
-%% PLOT D' FOR EACH DEPTH
-
-% dprime_depths(savedir, c)
-dprime_depths_days(savedir, c)
-
-%% psychometric slopes
-
-psych_slopes(pth, c)
-
-%%
-
-fa_rate(pth, c)
+ablation_corr(qpth, savedir, 'ACX', 'R', c, fontface)

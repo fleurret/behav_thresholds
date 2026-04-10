@@ -59,7 +59,7 @@ for i = 1:length(groups)
     
         fl = plot(xFit, yFit,...
             'Marker', 'none',...
-            'Color', [color, 0.3],...
+            'Color', [color, 0.25],...
             'LineWidth', 1.5,...
             'LineStyle', '-');
         uistack(fl, 'bottom');
@@ -70,7 +70,7 @@ for i = 1:length(groups)
     
     % populate legend values
     [~, cond, ~] =  fileparts(groups(i));
-    lv = append(cond,' (n = ', num2str(length(subjects)),')');
+    lv = append(cond,' (N = ', num2str(length(subjects)),')');
     C{i} = lv;
     
     % errorbar properties
@@ -118,7 +118,9 @@ ylabel(ax,'Threshold (dB re: 100%)',...
     'FontSize', 12);
 
 % legend
-legend(flip(C),'Location','southwest','FontSize',12);
+legend(f, C,...
+    'Location','southwest',...
+    'FontSize',12);
 legend boxoff
 
 % save

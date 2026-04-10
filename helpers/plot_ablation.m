@@ -1,13 +1,7 @@
-function plot_ablation(pth, savedir, abl, c)
+function plot_ablation(pth, savedir, abl, c, fontface)
 
 % select .csv
-d = uigetfile_n_dir(pth, 'Select file');
-
-if ~contains(d, '.csv')
-    warning('invalid file :(')
-end
-
-D = readtable(cell2mat(d));
+D = readtable(pth);
 
 % figure settings
 f = figure();
@@ -48,12 +42,14 @@ for i = 1:length(conditions)
     x = [groups(i)*2-1, groups(i)*2];
     
     % plot means and SEM
-    bar(ax, x, m,...
-        'FaceColor', c(i,:),...
+    color = matchcolor(conditions(i), c);
+    
+    bar(ax, x-0.5, m,...
+        'FaceColor', color,...
         'LineStyle', 'none')
     
     % errorbar properties
-    errorbar(x, m , sem,...
+    errorbar(x-0.5, m , sem,...
         'Color', 'k',...
         'CapSize', 0,...
         'LineWidth', 2,...
@@ -65,8 +61,15 @@ end
 xticks([groups*2-1])
 xticklabels(conditions)
 xlabel(ax,'Group',...
-    'FontSize',10,...
     'FontWeight', 'bold')
 ylabel(ax, append('% ablation'),...
-    'FontSize', 10,...
     'FontWeight', 'bold')
+set(findobj(ax,'-property','FontName'),...
+    'FontName', fontface,...
+    'FontSize', 12)
+
+% save
+prompt = {'File name (no extension):'};
+sfn = inputdlg(prompt, 'Save figure', [1 40]);
+sffn = cell2mat(fullfile(savedir, append(sfn, '.svg')));
+saveas(f,sffn)

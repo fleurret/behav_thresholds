@@ -1,13 +1,7 @@
-function ablation_corr(pth, savedir, abl, c)
+function ablation_corr(pth, savedir, abl, side, c, fontface)
 
 % find .csv
-d = uigetfile_n_dir(pth, 'Select file');
-
-if ~contains(d, '.csv')
-    warning('invalid file :(')
-end
-
-D = readtable(cell2mat(d));
+D = readtable(pth);
 
 % figure settings
 f = figure();
@@ -24,6 +18,15 @@ switch abl
         conditions = conditions(~contains(conditions,'rGFP'));
 end
 
+switch side
+    case 'L'
+        side = 'L_ablation';
+    case 'R'
+        side = 'R_ablation';
+    case 'Both'
+        side = 'Total_ablation';
+end
+
 plots = {'Starting_threshold', 'Best_threshold', 'Learning_rate', 'FA_rate'};
 
 for i = 1:length(plots)
@@ -35,7 +38,7 @@ for i = 1:length(plots)
         grp = D(strcmp(D.Condition, conditions(j)),:);
         color = matchcolor(conditions(j), c);
         
-        x = grp.L_ablation;
+        x = grp.(side);
         y = grp.(val);
         
         X = [X, x'];
@@ -51,35 +54,47 @@ for i = 1:length(plots)
             'MarkerEdgeAlpha', 0)
     end
     
+    xlim([-2 max(xlim)+2])
+    ylim([min(ylim)-2 max(ylim)+2])
     xlabel(ax(i), '% ablation',...
         'FontSize',10,...
         'FontWeight', 'bold')
     ylabel(ax(i), plots{i},...
-        'FontSize',10,...
+        'FontSize', 12,...
         'FontWeight', 'bold')
     set(ax(i), 'TickDir', 'out',...
         'XTickLabelRotation', 0,...
         'TickLength', [0.02,0.02],...
         'LineWidth', 3);
     set(findobj(ax(i),'-property','FontName'),...
-        'FontName','Arial')
+        'FontName', fontface,...
+        'FontSize', 12)
     
     coefficients = polyfit(X, Y, 1);
     xFit = linspace(min(X), max(X), 1000);
     yFit = polyval(coefficients , xFit);
     
-    hfit = line(ax(i), xFit, yFit, ...
-        'Color', 'k', ...
-        'LineWidth',3);
+%     hfit = line(ax(i), xFit, yFit, ...
+%         'Color', 'k', ...
+%         'LineWidth',3);
     
     % R and p values
-    [R,P] = corrcoef(X,Y,'rows','complete');
-    r = R(2);
-    p = P(2);
-    str = sprintf('R = %s, p = %s \n', num2str(r), num2str(p));
-    T = text(max(xlim)*0.85, max(ylim)-0.2, str);
+    [R,P] = corr(X', Y',...
+        'Type', 'pearson');
+    str = sprintf('R = %.5s \n p = %.5s \n', num2str(R), num2str(P));
+    T = text(max(xlim)-0.5, max(ylim)-1, str);
     set(findobj(T),...
         'FontSize', 9,...
-        'FontName', 'Arial',...
-        'HorizontalAlignment', 'center');
+        'FontName', fontface,...
+        'HorizontalAlignment', 'right');
 end
+
+% legend
+legend(conditions,'Location','southeast','FontSize',10);
+legend boxoff
+
+% save
+prompt = {'File name (no extension):'};
+sfn = inputdlg(prompt, 'Save figure', [1 40]);
+sffn = cell2mat(fullfile(savedir, append(sfn, '.svg')));
+saveas(f,sffn)
